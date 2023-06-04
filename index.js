@@ -12,7 +12,11 @@ bot.start((ctx) => ctx.reply("Welcome"));
 bot.help((ctx) => ctx.reply("Send me a sticker"));
 bot.on(message("sticker"), (ctx) => ctx.reply("👍"));
 bot.hears("hi", (ctx) => ctx.reply("Hey there"));
-
+bot.telegram.setMyCommands([
+  { command: "/weather", description: "Укажите город" },
+  { command: "/animals", description: "Хочу животное!" },
+  { command: "/keyboard", description: "Хочу клавиатуру!" },
+]);
 bot.command("weather", async (ctx) => {
   const { text } = ctx.update.message;
   const userText = text.split(" ")[1];
@@ -22,6 +26,7 @@ bot.command("weather", async (ctx) => {
 });
 
 bot.command("animals", async (ctx) => {
+  ctx.deleteMessage();
   bot.telegram.sendMessage(ctx.chat.id, "Hello with animals!", {
     reply_markup: {
       inline_keyboard: [
@@ -29,6 +34,12 @@ bot.command("animals", async (ctx) => {
         [{ text: "Dog!", callback_data: "dog" }],
       ],
     },
+  });
+});
+
+bot.command("keyboard", async (ctx) => {
+  bot.telegram.sendMessage(ctx.chat.id, "Want to test keyboards?", {
+    reply_markup: {},
   });
 });
 
