@@ -16,12 +16,31 @@ bot.start((ctx) => {
   ctx.reply(
     weclomeText,
     Markup.inlineKeyboard([
-      [Markup.button.callback("Создать группу", "createGroup")],
+      Markup.button.callback("👀 Просмотр групп", "groupList"),
+      Markup.button.callback("👥 Создать группу", "createGroup"),
     ])
-      .oneTime()
-      .resize()
   );
-  ctx.deleteMessage();
+  // ctx.deleteMessage();
+});
+
+bot.action("createGroup", async (ctx) => {
+  ctx.reply("✏️ Введите название группы");
+  return (
+    ctx.answerCbQuery(`Токийский дрифт 🏎 🇯🇵, отличное название!`),
+    ctx.reply(
+      "Группа Токийский дрифт 🏎 🇯🇵 успешно создана 🎉 Хотите пригласить друзей?",
+      Markup.inlineKeyboard([
+        Markup.button.callback("👀 Просмотр групп", "groupList"),
+        Markup.button.callback("📨 Отправить инвайт", "sendInvite"),
+      ])
+    )
+  );
+});
+
+bot.action("sendInvite", async (ctx) => {
+  ctx.reply(
+    "Отправь друзьям ссылку https://t.me/KimChenSplitBot?join_party=11b9a087-ec66-41ac..."
+  );
 });
 
 bot.command("expenses", async (ctx) => {
@@ -31,7 +50,7 @@ bot.command("expenses", async (ctx) => {
 
   await bot.telegram.sendMessage(
     ctx.chat.id,
-    "🥇 Вы находитесь в группе %группаНейм%"
+    "🥇 Вы просматриваете группу %группаНейм%."
   );
 
   await bot.telegram.sendMessage(
@@ -48,6 +67,12 @@ bot.command("expenses", async (ctx) => {
           [
             { text: "➕ Добавить расходы", callback_data: "addExpenses" },
             { text: "↩ Выбор группы", callback_data: "groupChoose" },
+          ],
+          [
+            {
+              text: "📨 Отправить инвайт",
+              callback_data: "sendInvite",
+            },
           ],
         ],
       },
@@ -213,9 +238,9 @@ bot.action("italic", async (ctx) => {
   });
 });
 
-bot.action(/.+/, (ctx) => {
-  return ctx.answerCbQuery(`Oh, ${ctx.match[0]}! Great choice`);
-});
+// bot.action(/.+/, (ctx) => {
+//   return ctx.answerCbQuery(`Oh, ${ctx.match[0]}! Great choice`);
+// });
 
 bot.action("cat", (ctx) => {
   bot.telegram.sendPhoto(ctx.chat.id, { source: "./res/rui2.png" });
